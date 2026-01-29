@@ -4,12 +4,66 @@ import { Camera, LogIn, Palette, Star, Sparkles, Zap } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { motion } from 'framer-motion';
 
+import TurnstileWidget from '../components/TurnstileWidget';
+
 const Home = () => {
     const navigate = useNavigate();
     const { user, signInWithGoogle, signOut, signInAnonymously } = useAuth();
+    const [showVerification, setShowVerification] = React.useState(false);
+    const [turnstileToken, setTurnstileToken] = React.useState(null);
+
+    const handleGuestClick = () => {
+        setShowVerification(true);
+    };
+
+    const handleVerificationSuccess = (token) => {
+        setTurnstileToken(token);
+        // Add a small delay for visual feedback before signing in
+        setTimeout(() => {
+            signInAnonymously();
+        }, 500);
+    };
 
     return (
         <div className="min-h-screen font-nunito flex flex-col relative overflow-hidden">
+
+            {/* Verification Modal */}
+            {showVerification && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                    <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="bg-[#2D1B69] border-4 border-game-secondary p-6 md:p-8 rounded-3xl max-w-sm w-full shadow-game-lg relative text-center"
+                    >
+                        <button
+                            onClick={() => setShowVerification(false)}
+                            className="absolute top-4 right-4 text-white/50 hover:text-white font-bold"
+                        >
+                            ✕
+                        </button>
+
+                        <h2 className="text-2xl font-titan text-white mb-2">SECURITY CHECK</h2>
+                        <p className="text-white/80 font-mono text-sm mb-6">Please verify you are not a robot to enter the arcade.</p>
+
+                        <div className="flex justify-center mb-4">
+                            <TurnstileWidget
+                                onSuccess={handleVerificationSuccess}
+                                onError={() => setTurnstileToken(null)}
+                            />
+                        </div>
+
+                        {turnstileToken && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="text-game-success font-bold font-mono animate-pulse"
+                            >
+                                ACCESS GRANTED...
+                            </motion.div>
+                        )}
+                    </motion.div>
+                </div>
+            )}
 
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
@@ -163,7 +217,7 @@ const Home = () => {
                             <motion.button
                                 whileHover={{ scale: 1.05, rotate: [0, -1, 1, 0] }}
                                 whileTap={{ scale: 0.95 }}
-                                onClick={signInAnonymously}
+                                onClick={handleGuestClick}
                                 className="w-full btn-game-secondary text-xl sm:text-2xl py-3 sm:py-4 px-6 bg-[#00F0FF] text-black shadow-game border-4 border-black rounded-2xl font-titan relative overflow-hidden group"
                             >
                                 <motion.div

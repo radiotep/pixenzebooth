@@ -15,6 +15,7 @@ const FrameManager = lazy(() => import('./pages/admin/FrameManager'));
 const FrameEditor = lazy(() => import('./pages/admin/FrameEditor'));
 const FrameCreator = lazy(() => import('./pages/FrameCreator'));
 const FrameSelection = lazy(() => import('./pages/FrameSelection'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 // Simple Loading Component
 const PageLoader = () => (
@@ -55,10 +56,14 @@ function App() {
                 <FrameEditor />
               </AdminRoute>
             } />
+
+
+            {/* 404 Route */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </Router>
-    </AuthProvider>
+    </AuthProvider >
   );
 }
 

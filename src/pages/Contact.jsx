@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Github, Instagram, Globe, MessageCircle, Sparkles } from 'lucide-react';
+import { Mail, Github, Instagram, Globe, MessageCircle, Sparkles, Send } from 'lucide-react';
+import TurnstileWidget from '../components/TurnstileWidget';
 
 const Contact = () => {
+    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+    const [turnstileToken, setTurnstileToken] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error'
+
     const contactMethods = [
         {
             icon: Mail,
@@ -37,6 +43,26 @@ const Contact = () => {
             bg: "from-game-success/20 to-game-success/5"
         }
     ];
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!turnstileToken) {
+            alert('Please complete the verification challenge.');
+            return;
+        }
+
+        setIsSubmitting(true);
+
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        console.log('Form Submitted:', { ...formData, token: turnstileToken });
+        setSubmitStatus('success');
+        setIsSubmitting(false);
+        setFormData({ name: '', email: '', message: '' });
+        setTurnstileToken(null);
+    };
 
     return (
         <div className="min-h-screen font-nunito text-white p-4 md:p-8 relative overflow-hidden">
@@ -91,44 +117,129 @@ const Contact = () => {
                         Kami senang mendengarnya!
                     </p>
                     <p className="text-sm md:text-base text-gray-300 mt-2">
-                        Silakan hubungi kami melalui:
+                        Silakan hubungi kami melalui sosial media di bawah atau kirim pesan langsung:
                     </p>
                 </motion.div>
 
-                {/* Contact Methods Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
-                    {contactMethods.map((method, index) => (
-                        <motion.a
-                            key={index}
-                            href={method.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            initial={{ y: 30, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.3 + (index * 0.1) }}
-                            whileHover={{ y: -5, scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className={`bg-gradient-to-br ${method.bg} backdrop-blur-sm border-4 border-black rounded-2xl p-6 shadow-game cursor-pointer group`}
-                        >
-                            <div className="flex items-center gap-4">
-                                <motion.div
-                                    whileHover={{ rotate: 360, scale: 1.2 }}
-                                    transition={{ duration: 0.5 }}
-                                    className={`${method.color} flex-shrink-0`}
-                                >
-                                    <method.icon size={40} className="md:w-12 md:h-12" />
-                                </motion.div>
-                                <div className="flex-1 min-w-0">
-                                    <p className="text-xs md:text-sm text-gray-400 font-bold uppercase tracking-wider mb-1">
+                {/* Contact Functions Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    {/* Left Column: Social Links */}
+                    <div className="flex flex-col gap-4">
+                        <h3 className="text-xl font-titan text-white mb-2 text-center md:text-left">SOCIALS</h3>
+                        {contactMethods.map((method, index) => (
+                            <motion.a
+                                key={index}
+                                href={method.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                initial={{ x: -20, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: 0.3 + (index * 0.1) }}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className={`bg-gradient-to-r ${method.bg} backdrop-blur-sm border-2 border-black rounded-xl p-4 shadow-game cursor-pointer group`}
+                            >
+                                <div className="flex items-center gap-4">
+                                    <div className={`${method.color}`}>
+                                        <method.icon size={24} />
+                                    </div>
+                                    <span className="font-bold text-white group-hover:text-game-accent transition">
                                         {method.label}
-                                    </p>
-                                    <p className="text-base md:text-lg font-bold text-white truncate group-hover:text-game-accent transition">
-                                        {method.value}
-                                    </p>
+                                    </span>
                                 </div>
-                            </div>
-                        </motion.a>
-                    ))}
+                            </motion.a>
+                        ))}
+                    </div>
+
+                    {/* Right Column: Contact Form */}
+                    <div className="flex flex-col">
+                        <h3 className="text-xl font-titan text-white mb-4 text-center md:text-left">SEND MESSAGE</h3>
+                        <motion.form
+                            initial={{ x: 20, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{ delay: 0.4 }}
+                            onSubmit={handleSubmit}
+                            className="bg-black/30 backdrop-blur-md border-4 border-black rounded-2xl p-6 shadow-game flex flex-col gap-4"
+                        >
+                            {submitStatus === 'success' ? (
+                                <div className="text-center py-10">
+                                    <motion.div
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        className="w-16 h-16 bg-game-success rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-black"
+                                    >
+                                        <Sparkles className="text-black" size={32} />
+                                    </motion.div>
+                                    <h3 className="text-2xl font-titan text-game-success mb-2">MESSAGE SENT!</h3>
+                                    <p className="text-white/80">Terima kasih sudah menghubungi kami.</p>
+                                    <button
+                                        onClick={() => setSubmitStatus(null)}
+                                        className="mt-6 text-sm underline text-white hover:text-game-accent"
+                                    >
+                                        Send another message
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    <div>
+                                        <label className="block font-bold text-sm mb-1 ml-1 text-game-secondary">NAMA</label>
+                                        <input
+                                            type="text"
+                                            placeholder="Your Name"
+                                            value={formData.name}
+                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                            required
+                                            className="w-full bg-white text-black font-bold p-3 rounded-xl border-2 border-black focus:outline-none focus:shadow-[4px_4px_0px_#00F0FF] transition-all"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block font-bold text-sm mb-1 ml-1 text-game-primary">EMAIL</label>
+                                        <input
+                                            type="email"
+                                            placeholder="your@email.com"
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            required
+                                            className="w-full bg-white text-black font-bold p-3 rounded-xl border-2 border-black focus:outline-none focus:shadow-[4px_4px_0px_#FF005C] transition-all"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block font-bold text-sm mb-1 ml-1 text-game-accent">PESAN</label>
+                                        <textarea
+                                            rows="4"
+                                            placeholder="Write your message here..."
+                                            value={formData.message}
+                                            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                            required
+                                            className="w-full bg-white text-black font-bold p-3 rounded-xl border-2 border-black focus:outline-none focus:shadow-[4px_4px_0px_#FFDE00] transition-all resize-none"
+                                        ></textarea>
+                                    </div>
+
+                                    {/* Turnstile Widget */}
+                                    <TurnstileWidget
+                                        onSuccess={(token) => setTurnstileToken(token)}
+                                        onError={() => setTurnstileToken(null)}
+                                    />
+
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting || !turnstileToken}
+                                        className={`w-full py-4 rounded-xl border-4 border-black font-titan text-xl shadow-game transition-all flex items-center justify-center gap-2
+                                            ${isSubmitting || !turnstileToken
+                                                ? 'bg-gray-500 cursor-not-allowed opacity-50'
+                                                : 'bg-game-success hover:-translate-y-1 hover:shadow-game-hover active:translate-y-0 active:shadow-game'
+                                            } text-black`}
+                                    >
+                                        {isSubmitting ? 'SENDING...' : (
+                                            <>
+                                                SEND MESSAGE <Send size={20} />
+                                            </>
+                                        )}
+                                    </button>
+                                </>
+                            )}
+                        </motion.form>
+                    </div>
                 </div>
 
                 {/* Collaboration Note */}
