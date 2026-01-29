@@ -44,13 +44,13 @@ const Contact = () => {
             <motion.div
                 animate={{ scale: [1, 1.3, 1], x: [0, 40, 0] }}
                 transition={{ repeat: Infinity, duration: 15, ease: "easeInOut" }}
-                className="hidden md:block absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-game-secondary/15 blur-[120px] rounded-full pointer-events-none"
+                className="hidden md:block absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-game-secondary/15 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             <motion.div
                 animate={{ scale: [1.2, 1, 1.2], rotate: [0, 360] }}
                 transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
-                className="hidden md:block absolute bottom-1/3 left-1/4 w-[500px] h-[500px] bg-game-primary/10 blur-[100px] rounded-full pointer-events-none"
+                className="hidden md:block absolute bottom-1/3 left-1/4 w-[500px] h-[500px] bg-game-primary/10 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             {/* Floating Sparkles */}
@@ -88,7 +88,7 @@ const Contact = () => {
                         Punya pertanyaan, saran, atau ingin kolaborasi?
                     </h2>
                     <p className="text-base md:text-lg text-gray-200">
-                        Kami senang mendengarnya! 💫
+                        Kami senang mendengarnya!
                     </p>
                     <p className="text-sm md:text-base text-gray-300 mt-2">
                         Silakan hubungi kami melalui:
@@ -157,7 +157,7 @@ const Contact = () => {
                                 className="mt-4 bg-black/50 border-2 border-game-accent rounded-lg p-4 font-mono text-sm md:text-base"
                             >
                                 <p className="text-game-accent font-bold">
-                                    📧 Subject: "Collaboration – PixenzeBooth"
+                                    Subject: "Collaboration – PixenzeBooth"
                                 </p>
                             </motion.div>
                         </div>

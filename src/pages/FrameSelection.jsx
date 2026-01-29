@@ -135,7 +135,7 @@ const FrameSelection = () => {
                         <h2 className="font-titan text-lg md:text-xl text-white">CHOOSE FIGHTER</h2>
                     </div>
 
-                    <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-3 overflow-y-auto flex-1 pr-2 pb-2 content-start" style={{ maxHeight: 'calc(100vh - 250px)' }}>
+                    <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5 gap-2 overflow-y-auto flex-1 pr-2 pb-2 content-start" style={{ maxHeight: 'calc(100vh - 250px)' }}>
                         {loading ? (
                             <div className="col-span-full text-center py-10 text-white font-bold animate-pulse">
                                 LOADING FIGHTERS...
@@ -145,11 +145,11 @@ const FrameSelection = () => {
                                 {frames.map((fighter) => (
                                     <motion.button
                                         key={fighter.id}
-                                        whileHover={{ scale: 1.05, y: -4 }}
+                                        whileHover={{ scale: 1.05, zIndex: 20 }}
                                         whileTap={{ scale: 0.95 }}
                                         onClick={() => setSelectedFrame(fighter)}
-                                        className={`aspect-square rounded-lg border-4 overflow-hidden relative transition-all ${selectedFrame?.id === fighter.id
-                                            ? 'border-game-accent shadow-[0_0_20px_rgba(255,215,0,0.8)] scale-105 z-10'
+                                        className={`aspect-square rounded-md border-2 md:border-4 overflow-hidden relative transition-all ${selectedFrame?.id === fighter.id
+                                            ? 'border-game-accent shadow-[0_0_15px_rgba(255,215,0,0.8)] scale-110 z-10'
                                             : 'border-black hover:border-game-primary'
                                             } ${fighter.status === 'coming_soon' ? 'opacity-60' : ''}`}
                                     >
@@ -159,7 +159,9 @@ const FrameSelection = () => {
                                         {/* Image/Icon */}
                                         {fighter.type === 'basic' ? (
                                             <div className="absolute inset-0 flex items-center justify-center">
-                                                <Star size={32} className="text-white drop-shadow-md" fill="currentColor" />
+                                                <Star size={24} className="text-white drop-shadow-md hidden sm:block md:hidden" fill="currentColor" />
+                                                <Star size={20} className="text-white drop-shadow-md sm:hidden" fill="currentColor" />
+                                                <Star size={28} className="text-white drop-shadow-md hidden md:block" fill="currentColor" />
                                             </div>
                                         ) : (
                                             <img

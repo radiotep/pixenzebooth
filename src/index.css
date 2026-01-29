@@ -298,6 +298,15 @@ body::after {
     animation: float 4s ease-in-out infinite;
 }
 
+/* Optimized Blob for Desktop performance */
+.blob-optimized {
+    will-change: transform;
+    filter: blur(80px);
+    /* Reduced from 120px/100px for better FPS */
+    transform: translateZ(0);
+    /* Force hardware acceleration */
+}
+
 @keyframes twinkle {
 
     0%,

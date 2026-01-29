@@ -6,7 +6,7 @@ const About = () => {
     const contributors = [
         {
             name: "Nanda Addi Wijaya",
-            role: "Creator & Developer",
+            role: "Office Boy",
             instagram: "@nandaaddiwijaya",
             link: "https://instagram.com/nandaaddiwijaya",
             color: "from-game-primary to-game-accent"
@@ -19,13 +19,13 @@ const About = () => {
             <motion.div
                 animate={{ scale: [1, 1.3, 1], rotate: [0, 180, 360] }}
                 transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                className="hidden md:block absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-game-primary/15 blur-[120px] rounded-full pointer-events-none"
+                className="hidden md:block absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-game-primary/15 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             <motion.div
                 animate={{ scale: [1.2, 1, 1.2], x: [0, 30, 0] }}
                 transition={{ repeat: Infinity, duration: 15, ease: "easeInOut" }}
-                className="hidden md:block absolute bottom-1/3 left-1/4 w-[500px] h-[500px] bg-game-accent/10 blur-[100px] rounded-full pointer-events-none"
+                className="hidden md:block absolute bottom-1/3 left-1/4 w-[500px] h-[500px] bg-game-accent/10 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             <div className="max-w-5xl mx-auto relative z-10">
@@ -182,7 +182,7 @@ const About = () => {
                             className="mt-8 p-4 md:p-6 bg-gradient-to-r from-game-primary/20 to-game-accent/20 rounded-xl border-2 border-game-accent/50 text-center"
                         >
                             <p className="text-sm md:text-base text-gray-200 mb-3">
-                                ✨ Tertarik untuk berkolaborasi atau berkontribusi? Hubungi kami!
+                                ✨ Tertarik untuk berkolaborasi atau berkontribusi? Hubungi Aquhh!
                             </p>
                             <a href="/contact">
                                 <motion.button
@@ -190,7 +190,7 @@ const About = () => {
                                     whileTap={{ scale: 0.95 }}
                                     className="bg-game-accent text-black font-bold px-6 py-2 rounded-lg border-4 border-black shadow-game hover:brightness-110 transition text-sm md:text-base font-titan"
                                 >
-                                    HUBUNGI KAMI
+                                    HUBUNGI AQUHH
                                 </motion.button>
                             </a>
                         </motion.div>

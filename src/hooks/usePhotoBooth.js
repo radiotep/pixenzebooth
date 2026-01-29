@@ -72,6 +72,8 @@ export const usePhotoBooth = () => {
         setConfig,
         startSession,
         reset,
+        setStatus,
+        setCountdown,
         videoRef
     };
 };

@@ -86,7 +86,7 @@ const Result = () => {
                     rotate: [0, 180, 360]
                 }}
                 transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                className="hidden md:block absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-game-accent/20 blur-[120px] rounded-full pointer-events-none"
+                className="hidden md:block absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-game-accent/20 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             <motion.div
@@ -96,7 +96,7 @@ const Result = () => {
                     y: [0, -20, 0]
                 }}
                 transition={{ repeat: Infinity, duration: 15, ease: "easeInOut" }}
-                className="hidden md:block absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-game-success/15 blur-[100px] rounded-full pointer-events-none"
+                className="hidden md:block absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-game-success/15 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             {/* Floating Stars */}

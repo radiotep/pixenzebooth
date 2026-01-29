@@ -22,7 +22,7 @@ const Home = () => {
                     y: [0, -30, 0]
                 }}
                 transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-                className="hidden md:block absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-[#00F0FF]/20 blur-[100px] rounded-full pointer-events-none"
+                className="hidden md:block absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-[#00F0FF]/20 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             <motion.div
@@ -32,7 +32,7 @@ const Home = () => {
                     y: [0, 40, 0]
                 }}
                 transition={{ repeat: Infinity, duration: 10, ease: "easeInOut" }}
-                className="hidden md:block absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#FF005C]/20 blur-[120px] rounded-full pointer-events-none"
+                className="hidden md:block absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#FF005C]/20 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             <motion.div
@@ -41,7 +41,7 @@ const Home = () => {
                     rotate: [0, 180, 360]
                 }}
                 transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
-                className="hidden md:block absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-[#FFDE00]/15 blur-[80px] rounded-full pointer-events-none"
+                className="hidden md:block absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-[#FFDE00]/15 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             {/* Floating Decorative Elements */}
@@ -263,7 +263,7 @@ const Home = () => {
                                         <motion.button
                                             whileHover={{ scale: 1.05, y: -3 }}
                                             whileTap={{ scale: 0.95 }}
-                                            className="w-full bg-white/90 hover:bg-game-surface text-black border-4 border-black shadow-game rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
+                                            className="w-full btn-game-primary rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
                                         >
                                             📖 ABOUT
                                         </motion.button>
@@ -272,7 +272,7 @@ const Home = () => {
                                         <motion.button
                                             whileHover={{ scale: 1.05, y: -3 }}
                                             whileTap={{ scale: 0.95 }}
-                                            className="w-full bg-white/90 hover:bg-game-surface text-black border-4 border-black shadow-game rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
+                                            className="w-full btn-game-accent rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
                                         >
                                             🔒 PRIVACY
                                         </motion.button>
@@ -281,7 +281,7 @@ const Home = () => {
                                         <motion.button
                                             whileHover={{ scale: 1.05, y: -3 }}
                                             whileTap={{ scale: 0.95 }}
-                                            className="w-full bg-white/90 hover:bg-game-surface text-black border-4 border-black shadow-game rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
+                                            className="w-full btn-game-secondary rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
                                         >
                                             💬 CONTACT
                                         </motion.button>

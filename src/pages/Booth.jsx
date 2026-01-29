@@ -3,13 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { usePhotoBooth } from '../hooks/usePhotoBooth';
 import { useCamera } from '../hooks/useCamera';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, ArrowLeft, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
+import { Camera, ArrowLeft, RotateCcw, ChevronDown, ChevronUp, Zap, Trash2 } from 'lucide-react';
 import CameraView from '../components/CameraView';
 
 const Booth = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
-    const { status, countdown, photos, setPhotos, startSession, reset, videoRef, config, setConfig } = usePhotoBooth();
+    const { status, countdown, photos, setPhotos, startSession, reset, setStatus, setCountdown, videoRef, config, setConfig } = usePhotoBooth();
     const { startCamera } = useCamera();
     const [showInventory, setShowInventory] = useState(false);
 
@@ -28,14 +28,31 @@ const Booth = () => {
         }
     }, [state, setConfig]);
 
-    useEffect(() => {
-        if (status === 'finished') {
-            navigate('/result', { state: { photos, config } });
-        }
-    }, [status, navigate, photos, config]);
+    // AUTO-NAVIGATE REMOVED: User must click "Finish" manually now.
 
     const handleStart = () => {
-        startSession(config);
+        if (status === 'finished') {
+            // Confirm & Go to Result
+            navigate('/result', { state: { photos, config } });
+            return;
+        }
+
+        if (photos.length > 0) {
+            // Resume session
+            setStatus('countdown');
+            setCountdown(3);
+        } else {
+            // New session
+            startSession(config);
+        }
+    };
+
+    const handleRemovePhoto = (index) => {
+        setPhotos(prev => prev.filter((_, i) => i !== index));
+        // If we remove a photo, we are definitely not finished. Set to idle so user can click Capture button again.
+        if (status === 'finished') {
+            setStatus('idle');
+        }
     };
 
     const handleFileUpload = (e) => {
@@ -51,10 +68,15 @@ const Booth = () => {
 
     const getFilterCss = (filterName) => {
         switch (filterName) {
-            case 'bright': return 'brightness(1.2) contrast(1.1)';
-            case 'vintage': return 'sepia(0.4) contrast(1.2)';
-            case 'bw': return 'grayscale(1)';
-            case 'soft': return 'contrast(0.9) brightness(1.1) blur(0.5px)';
+            case 'bright': return 'brightness(1.2) contrast(1.1) saturate(1.1)';
+            case 'vintage': return 'sepia(0.4) contrast(1.2) brightness(0.9)';
+            case 'bw': return 'grayscale(1) contrast(1.1)';
+            case 'noir': return 'grayscale(1) contrast(1.5) brightness(0.9)';
+            case 'soft': return 'contrast(0.9) brightness(1.1) saturate(0.8)';
+            case 'cyber': return 'hue-rotate(180deg) hue-rotate(60deg) contrast(1.2) saturate(1.2)'; // Cool blueish
+            case 'toxic': return 'hue-rotate(90deg) contrast(1.1) saturate(1.5)'; // Greenish
+            case 'gold': return 'sepia(0.3) saturate(1.5) contrast(1.1) brightness(1.1)';
+            case 'vampire': return 'saturate(1.5) contrast(1.2) hue-rotate(-30deg)';
             default: return 'none';
         }
     };
@@ -62,11 +84,16 @@ const Booth = () => {
     const progressPercent = (photos.length / config.totalPhotos) * 100;
 
     const filters = [
-        { id: 'none', label: 'NORMAL', icon: '⚪' },
-        { id: 'bright', label: 'BRIGHT', icon: '☀️' },
-        { id: 'bw', label: 'MONO', icon: '⚫' },
-        { id: 'vintage', label: 'RETRO', icon: '📼' },
-        { id: 'soft', label: 'SOFT', icon: '✨' },
+        { id: 'none', label: 'NORMAL', icon: '✨', color: 'bg-white text-black' },
+        { id: 'bright', label: 'BRIGHT', icon: '☀️', color: 'bg-yellow-100 text-yellow-800' },
+        { id: 'soft', label: 'SOFT', icon: '🌸', color: 'bg-pink-100 text-pink-800' },
+        { id: 'vintage', label: 'RETRO', icon: '📼', color: 'bg-orange-100 text-orange-800' },
+        { id: 'bw', label: 'MONO', icon: '⚫', color: 'bg-gray-200 text-gray-800' },
+        { id: 'noir', label: 'NOIR', icon: '🕵️', color: 'bg-gray-800 text-white' },
+        { id: 'gold', label: 'GOLD', icon: '👑', color: 'bg-yellow-400 text-black' },
+        { id: 'cyber', label: 'CYBER', icon: '🤖', color: 'bg-[#00F0FF] text-black' },
+        { id: 'toxic', label: 'TOXIC', icon: '🧪', color: 'bg-[#39FF14] text-black' },
+        { id: 'vampire', label: 'VAMP', icon: '🧛', color: 'bg-[#FF005C] text-white' },
     ];
 
     return (
@@ -81,7 +108,7 @@ const Booth = () => {
                     rotate: [0, 360]
                 }}
                 transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                className="hidden md:block absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-game-accent/15 blur-[120px] rounded-full pointer-events-none"
+                className="hidden md:block absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-game-accent/15 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             {/* COMPACT TOP HUD BAR */}
@@ -169,7 +196,7 @@ const Booth = () => {
                     </div>
 
                     <div className="rounded-xl md:rounded-2xl overflow-hidden border-4 border-gray-900 relative bg-neutral-900 aspect-video">
-                        <div style={{ filter: getFilterCss(config.filter) }} className="w-full h-full">
+                        <div style={{ filter: getFilterCss(config.filter) }} className="w-full h-full transition-all duration-300">
                             <CameraView onReady={(ref) => { if (videoRef) videoRef.current = ref.current; }} />
                         </div>
 
@@ -217,21 +244,24 @@ const Booth = () => {
                     animate={{ y: 0, opacity: 1 }}
                     className="bg-game-dark/80 backdrop-blur-md border-4 border-black rounded-xl md:rounded-2xl p-3 md:p-4 shadow-game"
                 >
-                    <h3 className="text-xs md:text-sm font-titan text-game-primary mb-2 md:mb-3">⚡ POWER-UPS</h3>
+                    <h3 className="text-xs md:text-sm font-titan text-game-primary mb-2 md:mb-3 flex items-center gap-2">
+                        <Zap size={16} fill="currentColor" />
+                        POWER-UPS (FILTERS)
+                    </h3>
                     <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                         {filters.map(f => (
                             <motion.button
                                 key={f.id}
-                                whileHover={{ scale: 1.05 }}
+                                whileHover={{ scale: 1.05, y: -2 }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => setConfig(prev => ({ ...prev, filter: f.id }))}
-                                className={`flex-shrink-0 px-4 md:px-6 py-2 md:py-3 rounded-lg border-3 md:border-4 border-black font-bold transition-all text-xs md:text-sm ${config.filter === f.id
-                                    ? 'bg-game-accent text-white shadow-[3px_3px_0_#000]'
-                                    : 'bg-white text-black hover:bg-game-surface'
+                                className={`flex-shrink-0 px-3 md:px-4 py-2 rounded-xl border-b-4 border-r-4 border border-black font-bold transition-all text-xs md:text-sm font-titan flex flex-col items-center gap-1 min-w-[70px] ${config.filter === f.id
+                                    ? f.color + ' border-black translate-y-[2px] border-b-2 border-r-2 shadow-inner brightness-110 ring-2 ring-white/50'
+                                    : f.color + ' hover:brightness-110 active:translate-y-[2px] active:border-b-2 active:border-r-2'
                                     }`}
                             >
-                                <div className="text-base md:text-lg mb-0.5">{f.icon}</div>
-                                {f.label}
+                                <span className="text-xl md:text-2xl drop-shadow-sm filter-icon">{f.icon}</span>
+                                <span className="text-[10px] md:text-xs tracking-wider opacity-90">{f.label}</span>
                             </motion.button>
                         ))}
                     </div>
@@ -242,12 +272,12 @@ const Booth = () => {
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                 >
-                    {status === 'idle' ? (
+                    {status === 'idle' || status === 'finished' ? (
                         <motion.button
                             whileHover={{ scale: 1.02, y: -2 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={handleStart}
-                            className="w-full py-3 md:py-5 text-white text-lg md:text-2xl btn-game-primary font-titan relative overflow-hidden"
+                            className={`w-full py-3 md:py-5 text-white text-lg md:text-2xl font-titan relative overflow-hidden transition-all ${status === 'finished' ? 'bg-game-success border-game-accent' : 'btn-game-primary'}`}
                         >
                             <motion.div
                                 animate={{ x: ['-100%', '200%'] }}
@@ -255,9 +285,17 @@ const Booth = () => {
                                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
                             ></motion.div>
                             <span className="relative z-10 flex items-center justify-center gap-2">
-                                <Camera size={20} className="md:hidden" />
-                                <Camera size={24} className="hidden md:block" />
-                                CAPTURE PHOTOS
+                                {status === 'finished' ? (
+                                    <>
+                                        🎉 FINISH & EDIT <ArrowLeft size={24} className="rotate-180" />
+                                    </>
+                                ) : (
+                                    <>
+                                        <Camera size={20} className="md:hidden" />
+                                        <Camera size={24} className="hidden md:block" />
+                                        CAPTURE PHOTOS
+                                    </>
+                                )}
                             </span>
                         </motion.button>
                     ) : (
@@ -303,7 +341,7 @@ const Booth = () => {
                                         initial={{ scale: 0 }}
                                         animate={{ scale: 1 }}
                                         transition={{ delay: i * 0.05 }}
-                                        className="aspect-square bg-black/50 rounded-lg border-3 md:border-4 border-black flex items-center justify-center relative overflow-hidden shadow-game"
+                                        className="aspect-square bg-black/50 rounded-lg border-3 md:border-4 border-black flex items-center justify-center relative overflow-hidden shadow-game group"
                                     >
                                         {photos[i] ? (
                                             <>
@@ -312,8 +350,21 @@ const Booth = () => {
                                                     className="w-full h-full object-cover"
                                                     alt={`Captured ${i + 1}`}
                                                 />
-                                                <div className="absolute top-1 left-1 bg-game-accent text-black text-xs px-1.5 py-0.5 rounded font-bold border-2 border-black">
+                                                <div className="absolute top-1 left-1 bg-game-accent text-black text-xs px-1.5 py-0.5 rounded font-bold border-2 border-black z-10">
                                                     {i + 1}
+                                                </div>
+
+                                                {/* Retake Overlay */}
+                                                <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <motion.button
+                                                        whileHover={{ scale: 1.1 }}
+                                                        whileTap={{ scale: 0.9 }}
+                                                        onClick={() => handleRemovePhoto(i)}
+                                                        className="p-2 bg-red-500 rounded-full text-white border-2 border-white"
+                                                        title="Retake Photo"
+                                                    >
+                                                        <Trash2 size={20} />
+                                                    </motion.button>
                                                 </div>
                                             </>
                                         ) : (
