@@ -81,7 +81,7 @@ const Booth = () => {
                     rotate: [0, 360]
                 }}
                 transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-game-accent/15 blur-[120px] rounded-full pointer-events-none"
+                className="hidden md:block absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-game-accent/15 blur-[120px] rounded-full pointer-events-none"
             ></motion.div>
 
             {/* COMPACT TOP HUD BAR */}

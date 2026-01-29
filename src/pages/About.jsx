@@ -19,13 +19,13 @@ const About = () => {
             <motion.div
                 animate={{ scale: [1, 1.3, 1], rotate: [0, 180, 360] }}
                 transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                className="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-game-primary/15 blur-[120px] rounded-full pointer-events-none"
+                className="hidden md:block absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-game-primary/15 blur-[120px] rounded-full pointer-events-none"
             ></motion.div>
 
             <motion.div
                 animate={{ scale: [1.2, 1, 1.2], x: [0, 30, 0] }}
                 transition={{ repeat: Infinity, duration: 15, ease: "easeInOut" }}
-                className="absolute bottom-1/3 left-1/4 w-[500px] h-[500px] bg-game-accent/10 blur-[100px] rounded-full pointer-events-none"
+                className="hidden md:block absolute bottom-1/3 left-1/4 w-[500px] h-[500px] bg-game-accent/10 blur-[100px] rounded-full pointer-events-none"
             ></motion.div>
 
             <div className="max-w-5xl mx-auto relative z-10">

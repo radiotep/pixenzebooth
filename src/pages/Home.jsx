@@ -14,7 +14,7 @@ const Home = () => {
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
 
-            {/* Multiple Animated Background Blobs */}
+            {/* Multiple Animated Background Blobs - Hidden on Mobile for Performance */}
             <motion.div
                 animate={{
                     scale: [1, 1.2, 1],
@@ -22,7 +22,7 @@ const Home = () => {
                     y: [0, -30, 0]
                 }}
                 transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-                className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-[#00F0FF]/20 blur-[100px] rounded-full pointer-events-none"
+                className="hidden md:block absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-[#00F0FF]/20 blur-[100px] rounded-full pointer-events-none"
             ></motion.div>
 
             <motion.div
@@ -32,7 +32,7 @@ const Home = () => {
                     y: [0, 40, 0]
                 }}
                 transition={{ repeat: Infinity, duration: 10, ease: "easeInOut" }}
-                className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#FF005C]/20 blur-[120px] rounded-full pointer-events-none"
+                className="hidden md:block absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#FF005C]/20 blur-[120px] rounded-full pointer-events-none"
             ></motion.div>
 
             <motion.div
@@ -41,7 +41,7 @@ const Home = () => {
                     rotate: [0, 180, 360]
                 }}
                 transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
-                className="absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-[#FFDE00]/15 blur-[80px] rounded-full pointer-events-none"
+                className="hidden md:block absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-[#FFDE00]/15 blur-[80px] rounded-full pointer-events-none"
             ></motion.div>
 
             {/* Floating Decorative Elements */}

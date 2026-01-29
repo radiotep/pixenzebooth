@@ -189,6 +189,20 @@ body::before {
     animation: twinkle 4s infinite;
 }
 
+/* Mobile Optimization for Stars */
+@media (max-width: 768px) {
+    body::before {
+        /* Reduce from 10 gradients to 3 for mobile */
+        background-image:
+            radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.8) 1.5px, transparent 1.5px),
+            radial-gradient(circle at 50% 15%, rgba(255, 255, 255, 0.9) 1px, transparent 1px),
+            radial-gradient(circle at 80% 25%, rgba(255, 255, 255, 0.7) 1.5px, transparent 1.5px);
+        animation: none;
+        /* Disable animation on mobile to save battery/performance */
+        opacity: 0.8;
+    }
+}
+
 body::after {
     content: '';
     position: fixed;
@@ -218,6 +232,19 @@ body::after {
     transform-origin: bottom;
     pointer-events: none;
     z-index: 0;
+}
+
+/* Mobile Optimization for Grid */
+@media (max-width: 768px) {
+    body::after {
+        /* Remove 3D perspective transform on mobile, simple flat grid is much faster */
+        transform: none;
+        height: 40%;
+        background:
+            linear-gradient(to bottom, transparent, rgba(0, 24, 39, 0.9)),
+            repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(0, 180, 216, 0.2) 39px, rgba(0, 180, 216, 0.3) 40px),
+            repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(0, 180, 216, 0.2) 39px, rgba(0, 180, 216, 0.3) 40px);
+    }
 }
 
 /* Custom Scrollbar */
