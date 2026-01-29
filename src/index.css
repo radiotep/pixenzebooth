@@ -1,0 +1,293 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;700&family=Titan+One&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+    /* Custom Font Families */
+    --font-family-titan: "Titan One", cursive;
+    --font-family-nunito: "Nunito", sans-serif;
+    --font-family-fredoka: "Fredoka", sans-serif;
+
+    /* Game Theme Colors */
+    --color-game-bg: #2D1B69;
+    --color-game-surface: #ffffff;
+    --color-game-primary: #FF005C;
+    --color-game-secondary: #00F0FF;
+    --color-game-accent: #FFDE00;
+    --color-game-success: #39FF14;
+    --color-game-dark: #111111;
+    --color-game-border: #000000;
+
+    /* Custom Shadows */
+    --shadow-game: 4px 4px 0px 0px #000000;
+    --shadow-game-hover: 6px 6px 0px 0px #000000;
+    --shadow-game-lg: 8px 8px 0px 0px #000000;
+
+    /* Custom Animations */
+    --animate-bounce-slow: bounce 3s infinite;
+    --animate-float: float 6s ease-in-out infinite;
+}
+
+@layer components {
+
+    /* Game Buttons */
+    .btn-game-primary {
+        background-color: #FF005C;
+        color: white;
+        font-family: 'Titan One', cursive;
+        border: 4px solid black;
+        box-shadow: 4px 4px 0px 0px #000000;
+        transition: all 0.2s;
+    }
+
+    .btn-game-primary:hover {
+        transform: translateY(-4px);
+        box-shadow: 6px 6px 0px 0px #000000;
+    }
+
+    .btn-game-primary:active {
+        transform: translateY(4px);
+        box-shadow: none;
+    }
+
+    .btn-game-accent {
+        background-color: #FFDE00;
+        color: black;
+        font-family: 'Titan One', cursive;
+        border: 4px solid black;
+        box-shadow: 4px 4px 0px 0px #000000;
+        transition: all 0.2s;
+    }
+
+    .btn-game-accent:hover {
+        transform: translateY(-4px);
+        box-shadow: 6px 6px 0px 0px #000000;
+    }
+
+    .btn-game-accent:active {
+        transform: translateY(4px);
+        box-shadow: none;
+    }
+
+    .btn-game-secondary {
+        background-color: #00F0FF;
+        color: black;
+        font-family: 'Titan One', cursive;
+        border: 4px solid black;
+        box-shadow: 4px 4px 0px 0px #000000;
+        transition: all 0.2s;
+    }
+
+    .btn-game-secondary:hover {
+        transform: translateY(-4px);
+        box-shadow: 6px 6px 0px 0px #000000;
+    }
+
+    .btn-game-secondary:active {
+        transform: translateY(4px);
+        box-shadow: none;
+    }
+
+    .btn-game-success {
+        background-color: #39FF14;
+        color: black;
+        font-family: 'Titan One', cursive;
+        border: 4px solid black;
+        box-shadow: 4px 4px 0px 0px #000000;
+        transition: all 0.2s;
+    }
+
+    .btn-game-success:hover {
+        transform: translateY(-4px);
+        box-shadow: 6px 6px 0px 0px #000000;
+    }
+
+    .btn-game-success:active {
+        transform: translateY(4px);
+        box-shadow: none;
+    }
+
+    .btn-game-danger {
+        background-color: #EF4444;
+        /* Red-500 */
+        color: white;
+        font-family: 'Titan One', cursive;
+        border: 4px solid black;
+        box-shadow: 4px 4px 0px 0px #000000;
+        transition: all 0.2s;
+    }
+
+    .btn-game-danger:hover {
+        transform: translateY(-4px);
+        box-shadow: 6px 6px 0px 0px #000000;
+        background-color: #DC2626;
+        /* Red-600 */
+    }
+
+    .btn-game-danger:active {
+        transform: translateY(4px);
+        box-shadow: none;
+    }
+
+    /* Cards */
+    .card-game {
+        background-color: white;
+        border: 4px solid black;
+        box-shadow: 4px 4px 0px 0px #000000;
+        border-radius: 1.5rem;
+        /* rounded-3xl */
+        padding: 1rem;
+    }
+
+    /* Text Effects */
+    .text-stroke {
+        -webkit-text-stroke: 2px black;
+        paint-order: stroke fill;
+    }
+
+    .text-stroke-white {
+        -webkit-text-stroke: 2px white;
+        paint-order: stroke fill;
+    }
+}
+
+body {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: linear-gradient(to bottom, #001827 0%, #003852 50%, #00486B 100%);
+    color: white;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+        radial-gradient(circle at 30% 5%, rgba(255, 255, 255, 0.6) 1.5px, transparent 1.5px),
+        radial-gradient(circle at 50% 15%, rgba(255, 255, 255, 0.9) 1px, transparent 1px),
+        radial-gradient(circle at 70% 8%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+        radial-gradient(circle at 85% 25%, rgba(255, 255, 255, 0.8) 1.5px, transparent 1.5px),
+        radial-gradient(circle at 15% 35%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+        radial-gradient(circle at 40% 30%, rgba(255, 255, 255, 0.9) 1px, transparent 1px),
+        radial-gradient(circle at 60% 40%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+        radial-gradient(circle at 90% 35%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+        radial-gradient(circle at 25% 45%, rgba(255, 255, 255, 0.65) 1px, transparent 1px);
+    background-size: 100% 50%;
+    background-repeat: no-repeat;
+    background-position: top;
+    pointer-events: none;
+    z-index: 0;
+    animation: twinkle 4s infinite;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60%;
+    background:
+        linear-gradient(to bottom,
+            transparent 0%,
+            rgba(0, 72, 107, 0.3) 20%,
+            rgba(0, 56, 82, 0.5) 40%,
+            rgba(0, 40, 62, 0.7) 60%,
+            rgba(0, 24, 39, 0.9) 100%),
+        repeating-linear-gradient(0deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 180, 216, 0.4) 39px,
+            rgba(0, 180, 216, 0.6) 40px),
+        repeating-linear-gradient(90deg,
+            transparent,
+            transparent 39px,
+            rgba(0, 180, 216, 0.4) 39px,
+            rgba(0, 180, 216, 0.6) 40px);
+    background-size: 100% 100%, 40px 40px, 40px 40px;
+    transform: perspective(300px) rotateX(60deg);
+    transform-origin: bottom;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #111;
+    border-left: 2px solid #333;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #FF005C;
+    border: 2px solid black;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #D1004B;
+}
+
+/* Animations */
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) skewX(-15deg);
+    }
+
+    100% {
+        transform: translateX(200%) skewX(-15deg);
+    }
+}
+
+.animate-shine {
+    animation: shine 2s infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Utilities */
+.font-titan {
+    font-family: 'Titan One', cursive;
+}
+
+/* Content above background */
+#root {
+    position: relative;
+    z-index: 1;
+}
