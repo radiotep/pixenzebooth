@@ -185,6 +185,7 @@ body::before {
     background-position: top;
     pointer-events: none;
     z-index: 0;
+    will-change: opacity;
     animation: twinkle 4s infinite;
 }
 
@@ -266,6 +267,7 @@ body::after {
 }
 
 .animate-float {
+    will-change: transform;
     animation: float 4s ease-in-out infinite;
 }
 
