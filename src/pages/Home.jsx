@@ -4,6 +4,8 @@ import { Camera, LogIn, Palette, Star, Sparkles, Zap } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { motion } from 'framer-motion';
 
+import { Helmet } from 'react-helmet-async';
+
 import TurnstileWidget from '../components/TurnstileWidget';
 
 const Home = () => {
@@ -26,6 +28,10 @@ const Home = () => {
 
     return (
         <div className="min-h-screen font-nunito flex flex-col relative overflow-hidden">
+            <Helmet>
+                <title>PixenzeBooth - Fun Online Photobooth</title>
+                <meta name="description" content="Click, Snap, Shine! Create amazing photo memories with PixenzeBooth. Fun frames, filters, and effects." />
+            </Helmet>
 
             {/* Verification Modal */}
             {showVerification && (
