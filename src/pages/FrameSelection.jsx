@@ -14,12 +14,14 @@ const FrameSelection = () => {
     // --- 1. Gather All Fighters (Frames) ---
     const [frames, setFrames] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedArtist, setSelectedArtist] = useState('all');
+    const [artists, setArtists] = useState(['Default']);
 
     // Basic Themes (Hardcoded for now as fallbacks/options)
     const basicThemes = [
-        { id: 'mario', type: 'basic', name: 'Mario', color: 'bg-[#6BB5FF]', hex: '#6BB5FF', stats: { style: 'Classic', vibes: '100' } },
-        { id: 'pink', type: 'basic', name: 'Peach', color: 'bg-[#FF99C8]', hex: '#FF99C8', stats: { style: 'Cute', vibes: '100' } },
-        { id: 'yellow', type: 'basic', name: 'Coin', color: 'bg-[#FBD000]', hex: '#FBD000', stats: { style: 'Shiny', vibes: '100' } },
+        { id: 'mario', type: 'basic', name: 'Mario', color: 'bg-[#6BB5FF]', hex: '#6BB5FF', stats: { style: 'Classic', vibes: '100' }, artist: 'Default' },
+        { id: 'pink', type: 'basic', name: 'Peach', color: 'bg-[#FF99C8]', hex: '#FF99C8', stats: { style: 'Cute', vibes: '100' }, artist: 'Default' },
+        { id: 'yellow', type: 'basic', name: 'Coin', color: 'bg-[#FBD000]', hex: '#FBD000', stats: { style: 'Shiny', vibes: '100' }, artist: 'Default' },
     ];
 
     useEffect(() => {
@@ -42,10 +44,16 @@ const FrameSelection = () => {
                     layout_config: f.layout_config,
                     stats: { style: f.style || 'Custom', vibes: '???' },
                     rarity: f.rarity || 'Common',
-                    status: f.status
+                    status: f.status,
+                    artist: f.artist || 'PixenzeBooth'
                 }));
 
-            setFrames([...formattedDbFrames, ...basicThemes]);
+            const allFrames = [...formattedDbFrames, ...basicThemes];
+
+            // Extract unique artists
+            const uniqueArtists = [...new Set(allFrames.map(f => f.artist).filter(Boolean))];
+            setArtists(uniqueArtists);
+            setFrames(allFrames);
 
             // Set default selection
             if (formattedDbFrames.length > 0) setSelectedFrame(formattedDbFrames[0]);
@@ -126,68 +134,93 @@ const FrameSelection = () => {
             </div>
 
             {/* Main Content Area - Fighting Game Style */}
-            <div className="flex-1 flex flex-col lg:flex-row relative z-10 overflow-hidden">
+            <div className="flex-1 flex flex-col lg:flex-row relative z-10 overflow-hidden min-h-0">
 
                 {/* LEFT SIDE: Character Grid Selection */}
-                <div className="lg:w-2/5 p-4 md:p-6 flex flex-col bg-gradient-to-br from-game-dark/40 to-transparent backdrop-blur-sm border-r-4 border-black">
-                    <div className="flex items-center gap-2 mb-4">
+                <div className="lg:w-2/5 p-4 md:p-6 flex flex-col bg-gradient-to-br from-game-dark/40 to-transparent backdrop-blur-sm border-r-4 border-black min-h-0 max-h-[40vh] lg:max-h-full">
+                    <div className="flex items-center gap-2 mb-2 flex-shrink-0">
                         <Sparkles className="text-game-accent" size={20} />
                         <h2 className="font-titan text-lg md:text-xl text-white">CHOOSE FIGHTER</h2>
                     </div>
 
-                    <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5 gap-2 overflow-y-auto flex-1 pr-2 pb-2 content-start" style={{ maxHeight: 'calc(100vh - 250px)' }}>
+                    {/* Artist Filter Tabs */}
+                    <div className="flex gap-1 mb-2 overflow-x-auto flex-shrink-0 scrollbar-hide">
+                        <button
+                            onClick={() => setSelectedArtist('all')}
+                            className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all ${selectedArtist === 'all'
+                                ? 'bg-game-accent text-black'
+                                : 'bg-white/10 text-white hover:bg-white/20'}`}
+                        >
+                            🎨 All
+                        </button>
+                        {artists.map(artist => (
+                            <button
+                                key={artist}
+                                onClick={() => setSelectedArtist(artist)}
+                                className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all ${selectedArtist === artist
+                                    ? 'bg-game-primary text-white'
+                                    : 'bg-white/10 text-white hover:bg-white/20'}`}
+                            >
+                                ✨ {artist}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="grid grid-cols-4 sm:grid-cols-5 lg:grid-cols-4 xl:grid-cols-5 gap-2 overflow-y-auto flex-1 pr-2 pb-2 content-start min-h-0">
                         {loading ? (
                             <div className="col-span-full text-center py-10 text-white font-bold animate-pulse">
                                 LOADING FIGHTERS...
                             </div>
                         ) : (
                             <>
-                                {frames.map((fighter) => (
-                                    <motion.button
-                                        key={fighter.id}
-                                        whileHover={{ scale: 1.05, zIndex: 20 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        onClick={() => setSelectedFrame(fighter)}
-                                        className={`aspect-square rounded-md border-2 md:border-4 overflow-hidden relative transition-all ${selectedFrame?.id === fighter.id
-                                            ? 'border-game-accent shadow-[0_0_15px_rgba(255,215,0,0.8)] scale-110 z-10'
-                                            : 'border-black hover:border-game-primary'
-                                            } ${fighter.status === 'coming_soon' ? 'opacity-60' : ''}`}
-                                    >
-                                        {/* Background */}
-                                        <div className={`absolute inset-0 ${fighter.type === 'basic' ? fighter.color : 'bg-gradient-to-br from-purple-900/60 via-indigo-900/60 to-purple-900/60'}`}></div>
+                                {frames
+                                    .filter(f => selectedArtist === 'all' || f.artist === selectedArtist)
+                                    .map((fighter) => (
+                                        <motion.button
+                                            key={fighter.id}
+                                            whileHover={{ scale: 1.05, zIndex: 20 }}
+                                            whileTap={{ scale: 0.95 }}
+                                            onClick={() => setSelectedFrame(fighter)}
+                                            className={`aspect-square rounded-md border-2 md:border-4 overflow-hidden relative transition-all ${selectedFrame?.id === fighter.id
+                                                ? 'border-game-accent shadow-[0_0_15px_rgba(255,215,0,0.8)] scale-110 z-10'
+                                                : 'border-black hover:border-game-primary'
+                                                } ${fighter.status === 'coming_soon' ? 'opacity-60' : ''}`}
+                                        >
+                                            {/* Background */}
+                                            <div className={`absolute inset-0 ${fighter.type === 'basic' ? fighter.color : 'bg-gradient-to-br from-purple-900/60 via-indigo-900/60 to-purple-900/60'}`}></div>
 
-                                        {/* Image/Icon */}
-                                        {fighter.type === 'basic' ? (
-                                            <div className="absolute inset-0 flex items-center justify-center">
-                                                <Star size={24} className="text-white drop-shadow-md hidden sm:block md:hidden" fill="currentColor" />
-                                                <Star size={20} className="text-white drop-shadow-md sm:hidden" fill="currentColor" />
-                                                <Star size={28} className="text-white drop-shadow-md hidden md:block" fill="currentColor" />
-                                            </div>
-                                        ) : (
-                                            <img
-                                                src={fighter.thumbnail || fighter.image}
-                                                alt={fighter.name}
-                                                className="absolute inset-0 w-full h-full object-cover"
-                                            />
-                                        )}
+                                            {/* Image/Icon */}
+                                            {fighter.type === 'basic' ? (
+                                                <div className="absolute inset-0 flex items-center justify-center">
+                                                    <Star size={24} className="text-white drop-shadow-md hidden sm:block md:hidden" fill="currentColor" />
+                                                    <Star size={20} className="text-white drop-shadow-md sm:hidden" fill="currentColor" />
+                                                    <Star size={28} className="text-white drop-shadow-md hidden md:block" fill="currentColor" />
+                                                </div>
+                                            ) : (
+                                                <img
+                                                    src={fighter.thumbnail || fighter.image}
+                                                    alt={fighter.name}
+                                                    className="absolute inset-0 w-full h-full object-cover"
+                                                />
+                                            )}
 
-                                        {/* Coming Soon Overlay */}
-                                        {fighter.status === 'coming_soon' && (
-                                            <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
-                                                <Lock size={24} className="text-yellow-400" />
-                                            </div>
-                                        )}
+                                            {/* Coming Soon Overlay */}
+                                            {fighter.status === 'coming_soon' && (
+                                                <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+                                                    <Lock size={24} className="text-yellow-400" />
+                                                </div>
+                                            )}
 
-                                        {/* Selected Border Glow */}
-                                        {selectedFrame?.id === fighter.id && (
-                                            <motion.div
-                                                animate={{ opacity: [0.5, 1, 0.5] }}
-                                                transition={{ repeat: Infinity, duration: 1.5 }}
-                                                className="absolute inset-0 border-4 border-game-accent pointer-events-none rounded-lg"
-                                            ></motion.div>
-                                        )}
-                                    </motion.button>
-                                ))}
+                                            {/* Selected Border Glow */}
+                                            {selectedFrame?.id === fighter.id && (
+                                                <motion.div
+                                                    animate={{ opacity: [0.5, 1, 0.5] }}
+                                                    transition={{ repeat: Infinity, duration: 1.5 }}
+                                                    className="absolute inset-0 border-4 border-game-accent pointer-events-none rounded-lg"
+                                                ></motion.div>
+                                            )}
+                                        </motion.button>
+                                    ))}
                             </>
                         )}
                     </div>

@@ -324,6 +324,21 @@ body::after {
     font-family: 'Titan One', cursive;
 }
 
+.text-stroke-sm {
+    -webkit-text-stroke: 1px black;
+    paint-order: stroke fill;
+}
+
+/* Hide scrollbar but allow scroll */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
 /* Content above background */
 #root {
     position: relative;
