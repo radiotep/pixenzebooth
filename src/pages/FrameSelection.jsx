@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getFrames } from '../services/frames';
 import FrameCard from '../components/FrameCard';
 import ComingSoonModal from '../components/ComingSoonModal';
+import bagibagiDonate from '../assets/bagibagi-donate.png';
 
 const FrameSelection = () => {
     const navigate = useNavigate();
@@ -115,6 +116,24 @@ const FrameSelection = () => {
 
             {/* Header */}
             <div className="relative z-10 pt-6 pb-4 px-4 border-b-4 border-black bg-game-dark/80 backdrop-blur-sm">
+                {/* Donate Button - Top Right */}
+                <motion.a
+                    href="https://bagibagi.co/nandaasc"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="absolute top-4 right-4 z-20 drop-shadow-lg hover:drop-shadow-xl transition-all"
+                >
+                    <img
+                        src={bagibagiDonate}
+                        alt="Donate with BagiBagi.co"
+                        className="h-10 sm:h-12 md:h-14 w-auto rounded-full"
+                    />
+                </motion.a>
+
                 <motion.h1
                     initial={{ y: -30, opacity: 0 }}
                     animate={{
@@ -129,7 +148,7 @@ const FrameSelection = () => {
                     }}
                     className="text-3xl sm:text-4xl md:text-5xl font-titan text-game-accent text-center text-stroke drop-shadow-game-lg"
                 >
-                    ⚡ SELECT YOUR FRAME ⚡
+                    SELECT YOUR FRAME
                 </motion.h1>
             </div>
 
