@@ -7,12 +7,39 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 
 import TurnstileWidget from '../components/TurnstileWidget';
+import bagibagiDonate from '../assets/bagibagi-donate.png';
 
 const Home = () => {
     const navigate = useNavigate();
     const { user, signInWithGoogle, signOut, signInAnonymously } = useAuth();
     const [showVerification, setShowVerification] = React.useState(false);
     const [turnstileToken, setTurnstileToken] = React.useState(null);
+
+    // Fun random names for guest users
+    const guestNames = [
+        'Orang Random', 'Guestnya gweh'
+    ];
+
+    // Get display name for user
+    const getDisplayName = React.useMemo(() => {
+        if (!user) return '';
+
+        // Check if user is anonymous (guest)
+        if (user.is_anonymous) {
+            // Use a consistent random name based on user id
+            const index = user.id.charCodeAt(0) % guestNames.length;
+            return guestNames[index];
+        }
+
+        // For Google Auth users, get their name
+        const fullName = user.user_metadata?.full_name ||
+            user.user_metadata?.name ||
+            user.email?.split('@')[0] ||
+            'Player';
+
+        // Get first name only for cleaner display
+        return fullName.split(' ')[0];
+    }, [user]);
 
     const handleGuestClick = () => {
         setShowVerification(true);
@@ -74,6 +101,25 @@ const Home = () => {
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#ffffff 2px, transparent 2px)', backgroundSize: '30px 30px' }}></div>
 
+            {/* Donate Button - Fixed Top Right */}
+            <motion.a
+                href="https://bagibagi.co/nandajoming"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                whileHover={{ scale: 1.08, y: -3 }}
+                whileTap={{ scale: 0.95 }}
+                className="fixed top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 z-50 drop-shadow-lg hover:drop-shadow-2xl transition-all"
+            >
+                <img
+                    src={bagibagiDonate}
+                    alt="Donate with BagiBagi.co"
+                    className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto"
+                />
+            </motion.a>
+
             {/* Multiple Animated Background Blobs - Hidden on Mobile for Performance */}
             <motion.div
                 animate={{
@@ -82,7 +128,7 @@ const Home = () => {
                     y: [0, -30, 0]
                 }}
                 transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-                className="hidden md:block absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-[#00F0FF]/20 blob-optimized rounded-full pointer-events-none"
+                className="hidden md:block absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-[#1a3dbf]/30 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             <motion.div
@@ -92,7 +138,7 @@ const Home = () => {
                     y: [0, 40, 0]
                 }}
                 transition={{ repeat: Infinity, duration: 10, ease: "easeInOut" }}
-                className="hidden md:block absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#FF005C]/20 blob-optimized rounded-full pointer-events-none"
+                className="hidden md:block absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#ba1c16]/20 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             <motion.div
@@ -101,7 +147,7 @@ const Home = () => {
                     rotate: [0, 180, 360]
                 }}
                 transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
-                className="hidden md:block absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-[#FFDE00]/15 blob-optimized rounded-full pointer-events-none"
+                className="hidden md:block absolute top-1/2 right-1/3 w-[300px] h-[300px] bg-[#face10]/20 blob-optimized rounded-full pointer-events-none"
             ></motion.div>
 
             {/* Floating Decorative Elements */}
@@ -113,7 +159,7 @@ const Home = () => {
                 transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
                 className="absolute top-20 left-10 md:left-20"
             >
-                <Sparkles className="w-8 h-8 md:w-12 md:h-12 text-game-accent" fill="currentColor" />
+                <Sparkles className="w-8 h-8 md:w-12 md:h-12 text-[#face10]" fill="currentColor" />
             </motion.div>
 
             <motion.div
@@ -136,7 +182,7 @@ const Home = () => {
                 transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
                 className="absolute bottom-32 left-16 md:left-32"
             >
-                <Zap className="w-7 h-7 md:w-10 md:h-10 text-game-success" fill="currentColor" />
+                <Zap className="w-7 h-7 md:w-10 md:h-10 text-[#39FF14]" fill="currentColor" />
             </motion.div>
 
             <motion.div
@@ -147,7 +193,7 @@ const Home = () => {
                 transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 1 }}
                 className="absolute bottom-20 right-20 md:right-40"
             >
-                <Sparkles className="w-6 h-6 md:w-9 md:h-9 text-game-primary" fill="currentColor" />
+                <Sparkles className="w-6 h-6 md:w-9 md:h-9 text-[#ba1c16]" fill="currentColor" />
             </motion.div>
 
             {/* Main Content Wrapper */}
@@ -188,7 +234,7 @@ const Home = () => {
                             transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
                             className="absolute -top-4 md:-top-8 -right-4 md:-right-8"
                         >
-                            <Star className="w-8 h-8 md:w-12 md:h-12 text-[#00F0FF]" fill="currentColor" />
+                            <Star className="w-8 h-8 md:w-12 md:h-12 text-[#face10]" fill="currentColor" />
                         </motion.div>
 
                         <motion.div
@@ -224,7 +270,7 @@ const Home = () => {
                                 whileHover={{ scale: 1.05, rotate: [0, -1, 1, 0] }}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={handleGuestClick}
-                                className="w-full btn-game-secondary text-xl sm:text-2xl py-3 sm:py-4 px-6 bg-[#00F0FF] text-black shadow-game border-4 border-black rounded-2xl font-titan relative overflow-hidden group"
+                                className="w-full btn-game-secondary text-xl sm:text-2xl py-3 sm:py-4 px-6 bg-[#face10] text-black shadow-game border-4 border-black rounded-2xl font-titan relative overflow-hidden group"
                             >
                                 <motion.div
                                     animate={{ x: [-100, 200] }}
@@ -280,7 +326,9 @@ const Home = () => {
                                     transition={{ repeat: Infinity, duration: 1.5 }}
                                     className="w-3 h-3 rounded-full bg-green-500 border border-black"
                                 ></motion.div>
-                                <span className="text-black font-bold font-titan tracking-wider text-sm md:text-base">PLAYER 1 READY</span>
+                                <span className="text-black font-bold font-titan tracking-wider text-sm md:text-base">
+                                    HI, {getDisplayName.toUpperCase()}!
+                                </span>
                             </motion.div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 w-full">
@@ -325,7 +373,7 @@ const Home = () => {
                                             whileTap={{ scale: 0.95 }}
                                             className="w-full btn-game-primary rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
                                         >
-                                            📖 ABOUT
+                                            ABOUT
                                         </motion.button>
                                     </Link>
                                     <Link to="/privacy">
@@ -334,16 +382,16 @@ const Home = () => {
                                             whileTap={{ scale: 0.95 }}
                                             className="w-full btn-game-accent rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
                                         >
-                                            🔒 PRIVACY
+                                            PRIVACY
                                         </motion.button>
                                     </Link>
                                     <Link to="/contact">
                                         <motion.button
                                             whileHover={{ scale: 1.05, y: -3 }}
                                             whileTap={{ scale: 0.95 }}
-                                            className="w-full btn-game-secondary rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
+                                            className="w-full btn-game-secondary rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2 !text-black"
                                         >
-                                            💬 CONTACT
+                                            CONTACT
                                         </motion.button>
                                     </Link>
                                 </motion.div>

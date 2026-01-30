@@ -41,7 +41,7 @@ const Result = () => {
     };
 
     const handleRetake = () => {
-        navigate('/booth');
+        navigate('/');
     };
 
     const handleShare = async () => {
@@ -69,7 +69,7 @@ const Result = () => {
 
     if (!stripUrl) return (
         <div className="flex justify-center items-center h-screen font-titan text-xl md:text-2xl animate-pulse text-white">
-            Creating Magic... ✨
+            Tunggu Ya Kaks!...
         </div>
     );
 
@@ -190,7 +190,7 @@ const Result = () => {
                                 whileTap={{ scale: 0.98 }}
                                 onClick={handleShare}
                                 disabled={saving}
-                                className="w-full py-3 btn-game-secondary flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
+                                className="w-full py-3 btn-game-secondary flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base !text-black"
                             >
                                 <Share2 size={20} /> {saving ? 'UPLOADING...' : 'UPLOAD TO CLOUD'}
                             </motion.button>
