@@ -45,6 +45,7 @@ export const createFrame = async (frameData) => {
             layout_config: frameData.layout_config,
             style: frameData.style || 'Custom',
             rarity: frameData.rarity || 'Common',
+            artist: frameData.artist || 'Default',
             type: 'custom'
         }])
         .select()

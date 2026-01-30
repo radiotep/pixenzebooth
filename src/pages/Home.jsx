@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 
 import TurnstileWidget from '../components/TurnstileWidget';
-import bagibagiDonate from '../assets/bagibagi-donate.png';
+import bagibagiDonate from '../assets/bagibagi-donate.webp';
 
 import logoNew from '../assets/logo-new.png';
 
@@ -118,6 +118,8 @@ const Home = () => {
                 <img
                     src={bagibagiDonate}
                     alt="Donate with BagiBagi.co"
+                    width={200}
+                    height={56}
                     className="h-8 sm:h-10 md:h-12 lg:h-14 w-auto"
                 />
             </motion.a>
@@ -373,7 +375,7 @@ const Home = () => {
                                         <motion.button
                                             whileHover={{ scale: 1.05, y: -3 }}
                                             whileTap={{ scale: 0.95 }}
-                                            className="w-full btn-game-primary rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
+                                            className="w-full btn-game-primary rounded-xl px-6 py-4 min-h-[48px] font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
                                         >
                                             ABOUT
                                         </motion.button>
@@ -382,7 +384,7 @@ const Home = () => {
                                         <motion.button
                                             whileHover={{ scale: 1.05, y: -3 }}
                                             whileTap={{ scale: 0.95 }}
-                                            className="w-full btn-game-accent rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
+                                            className="w-full btn-game-accent rounded-xl px-6 py-4 min-h-[48px] font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2"
                                         >
                                             PRIVACY
                                         </motion.button>
@@ -391,7 +393,7 @@ const Home = () => {
                                         <motion.button
                                             whileHover={{ scale: 1.05, y: -3 }}
                                             whileTap={{ scale: 0.95 }}
-                                            className="w-full btn-game-secondary rounded-xl px-4 py-3 font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2 !text-black"
+                                            className="w-full btn-game-secondary rounded-xl px-6 py-4 min-h-[48px] font-bold text-sm md:text-base font-titan flex items-center justify-center gap-2 !text-black"
                                         >
                                             CONTACT
                                         </motion.button>

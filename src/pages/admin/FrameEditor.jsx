@@ -18,6 +18,7 @@ const FrameEditor = () => {
 
     const [style, setStyle] = useState(editingFrame?.style || 'Custom');
     const [rarity, setRarity] = useState(editingFrame?.rarity || 'Common');
+    const [artist, setArtist] = useState(editingFrame?.artist || 'Default');
     const [thumbnailFile, setThumbnailFile] = useState(null);
     const [thumbnailPreview, setThumbnailPreview] = useState(editingFrame?.thumbnail_url || null);
 
@@ -93,6 +94,7 @@ const FrameEditor = () => {
                 status,
                 style,
                 rarity,
+                artist,
                 layout_config: photoSlots,
                 file: imageFile,
                 thumbnailFile: thumbnailFile,
@@ -198,6 +200,17 @@ const FrameEditor = () => {
                                     <option value="Event">Event</option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div>
+                            <label className="block text-xs font-bold text-gray-500 mb-1">ARTIST / LABEL</label>
+                            <input
+                                type="text"
+                                value={artist}
+                                onChange={e => setArtist(e.target.value)}
+                                placeholder="e.g. Default, Pixenze Theme, Event"
+                                className="w-full bg-white/5 border border-gray-600 rounded p-2 text-white outline-none focus:border-yellow-400"
+                            />
                         </div>
 
                         {/* Image Uploads */}

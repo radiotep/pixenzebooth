@@ -391,73 +391,81 @@ const Result = () => {
                             animate={{ scale: 1, rotate: 0 }}
                             exit={{ scale: 0, opacity: 0 }}
                             transition={{ type: "spring", bounce: 0.5 }}
-                            className="bg-gradient-to-br from-yellow-400 to-orange-500 border-[6px] border-white p-6 md:p-8 rounded-3xl max-w-lg w-full relative shadow-[0_0_50px_rgba(255,215,0,0.6)] text-center"
+                            className="bg-game-surface border-[6px] border-game-border p-5 md:p-8 rounded-3xl max-w-lg w-full relative shadow-[8px_8px_0_#000] text-center max-h-[90vh] overflow-y-auto scrollbar-hide"
                         >
                             <button
                                 onClick={() => setShowCampaignModal(false)}
-                                className="absolute top-4 right-4 text-white hover:scale-110 font-bold bg-black/20 rounded-full w-8 h-8 flex items-center justify-center"
+                                className="absolute top-4 right-4 text-black/50 hover:text-red-500 hover:scale-110 transition-transform"
                             >
-                                ✕
+                                <X size={32} />
                             </button>
 
                             <motion.div
                                 animate={{ rotate: [0, 10, -10, 0] }}
                                 transition={{ repeat: Infinity, duration: 2 }}
-                                className="inline-block bg-white p-3 rounded-full border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.2)] mb-4"
+                                className="inline-block bg-game-secondary p-4 rounded-full border-4 border-black shadow-game mb-4 md:mb-6"
                             >
-                                <span className="text-4xl">🎉</span>
+                                <span className="text-4xl md:text-5xl">🎉</span>
                             </motion.div>
 
-                            <h2 className="text-3xl md:text-5xl font-titan text-white drop-shadow-[4px_4px_0_#000] mb-2 leading-tight">
+                            <h2 className="text-3xl md:text-5xl font-titan text-game-primary drop-shadow-sm mb-2 leading-tight text-stroke-sm text-white">
                                 YOU ARE LUCKY!
                             </h2>
-                            <p className="text-black font-bold font-mono text-sm md:text-base mb-6 bg-white/30 inline-block px-4 py-1 rounded-full border border-black/10">
+                            <p className="text-black font-bold font-mono text-xs md:text-sm mb-6 bg-yellow-100 inline-block px-4 py-2 rounded-full border-2 border-black/10">
                                 LIMITED SLOT! CLAIM YOUR FREE PRINT
                             </p>
 
-                            <form onSubmit={handleCampaignSubmit} className="flex flex-col gap-3 text-left">
+                            <form onSubmit={handleCampaignSubmit} className="flex flex-col gap-4 text-left">
                                 <div className="space-y-1">
-                                    <label className="text-xs font-bold text-black uppercase ml-1">Full Name</label>
+                                    <label className="text-xs font-titan text-black ml-1 tracking-wider">FULL NAME</label>
                                     <input
                                         type="text" required
                                         value={campaignData.name}
                                         onChange={e => setCampaignData({ ...campaignData, name: e.target.value })}
-                                        className="w-full p-3 rounded-xl border-4 border-black font-bold focus:ring-4 ring-white outline-none"
+                                        className="w-full p-3 rounded-xl border-4 border-black font-bold font-nunito focus:ring-4 ring-game-primary/20 outline-none bg-white text-black"
                                         placeholder="Your Name"
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-xs font-bold text-black uppercase ml-1">WhatsApp Number</label>
+                                    <label className="text-xs font-titan text-black ml-1 tracking-wider">WHATSAPP NUMBER</label>
                                     <input
                                         type="tel" required
                                         value={campaignData.whatsapp}
                                         onChange={e => setCampaignData({ ...campaignData, whatsapp: e.target.value })}
-                                        className="w-full p-3 rounded-xl border-4 border-black font-bold focus:ring-4 ring-white outline-none"
+                                        className="w-full p-3 rounded-xl border-4 border-black font-bold font-nunito focus:ring-4 ring-game-primary/20 outline-none bg-white text-black"
                                         placeholder="08xxxxxxxx"
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-xs font-bold text-black uppercase ml-1">Shipping Address</label>
+                                    <label className="text-xs font-titan text-black ml-1 tracking-wider">SHIPPING ADDRESS</label>
                                     <textarea
                                         required
                                         value={campaignData.address}
                                         onChange={e => setCampaignData({ ...campaignData, address: e.target.value })}
-                                        className="w-full p-3 rounded-xl border-4 border-black font-bold focus:ring-4 ring-white outline-none h-24 resize-none"
+                                        className="w-full p-3 rounded-xl border-4 border-black font-bold font-nunito focus:ring-4 ring-game-primary/20 outline-none h-24 resize-none bg-white text-black"
                                         placeholder="Full address for delivery..."
                                     />
                                 </div>
 
                                 <motion.button
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
+                                    whileHover={{ scale: 1.02, y: -4 }}
+                                    whileTap={{ scale: 0.98 }}
                                     disabled={campaignLoading}
                                     type="submit"
-                                    className="mt-4 bg-[#39FF14] text-black font-titan text-xl py-4 rounded-xl border-b-8 border-green-800 hover:border-b-0 hover:translate-y-2 transition-all shadow-xl"
+                                    className="mt-2 w-full btn-game-success text-lg md:text-xl py-4 rounded-xl flex items-center justify-center gap-2"
                                 >
-                                    {campaignLoading ? 'CLAIMING...' : 'CLAIM REWARD NOW!'}
+                                    {campaignLoading ? (
+                                        <>
+                                            <Sparkles className="animate-spin" size={24} /> CLAIMING...
+                                        </>
+                                    ) : (
+                                        <>
+                                            CLAIM REWARD NOW! <Star fill="currentColor" />
+                                        </>
+                                    )}
                                 </motion.button>
                             </form>
-                            <p className="text-[10px] text-black/50 mt-4 font-mono">
+                            <p className="text-[10px] text-black/40 mt-4 font-mono font-bold">
                                 *First come first serve. Only for first 10 winners.
                             </p>
                         </motion.div>

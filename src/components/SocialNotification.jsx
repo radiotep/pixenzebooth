@@ -28,6 +28,7 @@ const SocialNotification = () => {
                     <button
                         onClick={() => setIsVisible(false)}
                         className="ml-1 p-0.5 hover:bg-white/10 rounded-full transition-colors"
+                        aria-label="Dismiss notification"
                     >
                         <X size={12} className="text-gray-400 hover:text-white" />
                     </button>

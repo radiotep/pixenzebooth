@@ -144,7 +144,7 @@ const About = () => {
                                         >
                                             {contributor.name === "Nanda Addi Wijaya" ? (
                                                 <img
-                                                    src="/nanda-profile.png"
+                                                    src="/nanda-profile.jpg"
                                                     alt="Nanda Addi Wijaya"
                                                     className="w-full h-full object-cover"
                                                 />

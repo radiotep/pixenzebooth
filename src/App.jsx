@@ -33,39 +33,41 @@ function App() {
         <AuthProvider>
           <Router>
             <SocialNotification />
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/select-frame" element={<FrameSelection />} />
-                <Route path="/booth" element={<Booth />} />
-                <Route path="/result" element={<Result />} />
-                <Route path="/create-frame" element={<FrameCreator />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/privacy" element={<PrivacyPolicy />} />
-                <Route path="/contact" element={<Contact />} />
+            <main id="main-content">
+              <Suspense fallback={<PageLoader />}>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/select-frame" element={<FrameSelection />} />
+                  <Route path="/booth" element={<Booth />} />
+                  <Route path="/result" element={<Result />} />
+                  <Route path="/create-frame" element={<FrameCreator />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/contact" element={<Contact />} />
 
-                {/* Admin Routes */}
-                <Route path="/admin/frames" element={
-                  <AdminRoute>
-                    <FrameManager />
-                  </AdminRoute>
-                } />
-                <Route path="/admin/frames/new" element={
-                  <AdminRoute>
-                    <FrameEditor />
-                  </AdminRoute>
-                } />
-                <Route path="/admin/frames/edit/:id" element={
-                  <AdminRoute>
-                    <FrameEditor />
-                  </AdminRoute>
-                } />
+                  {/* Admin Routes */}
+                  <Route path="/admin/frames" element={
+                    <AdminRoute>
+                      <FrameManager />
+                    </AdminRoute>
+                  } />
+                  <Route path="/admin/frames/new" element={
+                    <AdminRoute>
+                      <FrameEditor />
+                    </AdminRoute>
+                  } />
+                  <Route path="/admin/frames/edit/:id" element={
+                    <AdminRoute>
+                      <FrameEditor />
+                    </AdminRoute>
+                  } />
 
 
-                {/* 404 Route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
+                  {/* 404 Route */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </main>
           </Router>
         </AuthProvider>
       </AlertProvider>
