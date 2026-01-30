@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useAlert } from '../../context/AlertContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { createFrame, updateFrame } from '../../services/frames';
 import { ArrowLeft, Save, Plus, X, Type } from 'lucide-react';
@@ -6,6 +7,7 @@ import { motion } from 'framer-motion';
 
 const FrameEditor = () => {
     const navigate = useNavigate();
+    const { showAlert } = useAlert();
     const { state } = useLocation();
     const editingFrame = state?.frame;
 
@@ -82,7 +84,7 @@ const FrameEditor = () => {
     };
 
     const handleSave = async () => {
-        if (!name || !imagePreview) return alert("Please provide name and system image.");
+        if (!name || !imagePreview) return showAlert("Please provide name and system image.", "error");
         setUploading(true);
 
         try {
@@ -103,11 +105,11 @@ const FrameEditor = () => {
                 await createFrame(frameData);
             }
 
-            alert("Frame Saved Successfully!");
+            showAlert("Frame Saved Successfully!", "success");
             navigate('/admin/frames');
         } catch (error) {
             console.error(error);
-            alert("Error saving frame: " + error.message);
+            showAlert("Error saving frame: " + error.message, "error");
         } finally {
             setUploading(false);
         }

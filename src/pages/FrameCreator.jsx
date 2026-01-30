@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useAlert } from '../context/AlertContext';
 import { useNavigate } from 'react-router-dom';
 import { Upload, Save, ArrowLeft, Image as ImageIcon, Type, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const FrameCreator = () => {
     const navigate = useNavigate();
+    const { showAlert } = useAlert();
     const canvasRef = useRef(null);
     const [backgroundImage, setBackgroundImage] = useState(null);
     const [elements, setElements] = useState([]); // Array of { type: 'text' | 'image', content, x, y, color, size }
@@ -106,7 +108,7 @@ const FrameCreator = () => {
         });
         localStorage.setItem('custom_frames', JSON.stringify(existing));
 
-        alert("Frame Saved! You can find it in the 'My Custom Frames' section.");
+        showAlert("Frame Saved! You can find it in the 'My Custom Frames' section.", "success");
         navigate('/select-frame');
     };
 

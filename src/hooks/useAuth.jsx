@@ -1,11 +1,13 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '../lib/supabase';
+import { useAlert } from '../context/AlertContext';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const { showAlert } = useAlert();
 
     useEffect(() => {
         if (!supabase) {
@@ -28,7 +30,7 @@ export const AuthProvider = ({ children }) => {
 
     const signInWithGoogle = async () => {
         if (!supabase) {
-            alert("Backend not configured. Cannot login.");
+            showAlert("Backend not configured. Cannot login.", "error");
             return;
         }
         const { error } = await supabase.auth.signInWithOAuth({
@@ -39,7 +41,7 @@ export const AuthProvider = ({ children }) => {
         });
         if (error) {
             console.error("Login Error:", error);
-            alert(`Login Failed: ${error.message}\n(Hint: Did you enable the Google Provider in your Supabase Dashboard?)`);
+            showAlert(`Login Failed: ${error.message}\n(Hint: Did you enable the Google Provider in your Supabase Dashboard?)`, "error");
         }
     };
 
@@ -53,7 +55,7 @@ export const AuthProvider = ({ children }) => {
         const { error } = await supabase.auth.signInAnonymously();
         if (error) {
             console.error(error);
-            alert(`Guest Login Failed: ${error.message}\n(Make sure 'Anonymous Sign-ins' is enabled in Supabase Auth Providers)`);
+            showAlert(`Guest Login Failed: ${error.message}\n(Make sure 'Anonymous Sign-ins' is enabled in Supabase Auth Providers)`, "error");
         }
     };
 

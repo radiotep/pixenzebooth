@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAlert } from '../context/AlertContext';
 import { motion } from 'framer-motion';
 import { Mail, Github, Instagram, Globe, MessageCircle, Sparkles, Send } from 'lucide-react';
 import TurnstileWidget from '../components/TurnstileWidget';
@@ -9,6 +10,7 @@ const Contact = () => {
     const [turnstileToken, setTurnstileToken] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState(null);
+    const { showAlert } = useAlert();
 
     const contactMethods = [
         {
@@ -49,7 +51,7 @@ const Contact = () => {
         e.preventDefault();
 
         if (!turnstileToken) {
-            alert('Please complete the verification challenge.');
+            showAlert('Please complete the verification challenge.', 'error');
             return;
         }
 

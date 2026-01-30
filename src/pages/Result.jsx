@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react';
+import { useAlert } from '../context/AlertContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createStrip } from '../utils/imageUtils';
-import { Download, Share2, RotateCcw, Star, Sparkles } from 'lucide-react';
+import { Download, Share2, RotateCcw, Star, Sparkles, Mail, X } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../lib/supabase';
+import { uploadAndSendEmail } from '../services/googleDriveService';
 import { motion } from 'framer-motion';
 
 const Result = () => {
     const { state } = useLocation();
     const navigate = useNavigate();
     const { user } = useAuth();
+    const { showAlert } = useAlert();
     const [stripUrl, setStripUrl] = useState(null);
     const [saving, setSaving] = useState(false);
+    const [showEmailModal, setShowEmailModal] = useState(false);
+    const [email, setEmail] = useState('');
 
     useEffect(() => {
         if (state?.photos) {
@@ -21,7 +26,7 @@ const Result = () => {
                     setStripUrl(url);
                 } catch (error) {
                     console.error("Failed to generate strip", error);
-                    alert("Failed to generate your photo strip. Please try again.");
+                    showAlert("Failed to generate your photo strip. Please try again.", "error");
                     navigate('/');
                 }
             };
@@ -44,24 +49,51 @@ const Result = () => {
         navigate('/');
     };
 
-    const handleShare = async () => {
-        if (!user || !supabase) {
-            alert("Please login to save your mission data!");
+    const handleEmailClick = () => {
+        if (!user) {
+            showAlert("Please login to use this feature!", "error");
             return;
         }
+        setShowEmailModal(true);
+    };
+
+    const handleSendEmail = async (e) => {
+        e.preventDefault();
+        if (!email) return;
+
         setSaving(true);
         try {
-            const res = await fetch(stripUrl);
-            const blob = await res.blob();
-            const fileName = `${user.id}/${Date.now()}.png`;
-            const { error: uploadError } = await supabase.storage.from('photos').upload(fileName, blob);
-            if (uploadError) throw uploadError;
-            const { error: dbError } = await supabase.from('history').insert([{ user_id: user.id, url: fileName, created_at: new Date() }]);
-            if (dbError) throw dbError;
-            alert("MISSION DATA ARCHIVED SUCCESSFULLY.");
+            // 1. Upload to Google Drive & Send Email
+            const result = await uploadAndSendEmail(stripUrl, email);
+
+            if (!result.success) {
+                throw new Error(result.message);
+            }
+
+            // 2. Save Metadata to Supabase
+            // We use the Google Drive Public URL (result.url) 
+            if (user && supabase) {
+                const { error: dbError } = await supabase.from('history').insert([{
+                    user_id: user.id,
+                    url: 'GOOGLE_DRIVE_UPLOAD', // Legacy column requiring value
+                    email: email,
+                    gdrive_link: result.url,
+                    created_at: new Date()
+                }]);
+
+                if (dbError) {
+                    console.error("Metadata save failed:", dbError);
+                    // We don't block the user success message if just the DB log failed
+                }
+            }
+
+            showAlert(`SUCCESS! check your email: ${email}`, "success");
+            setShowEmailModal(false);
+            setEmail('');
+
         } catch (err) {
             console.error(err);
-            alert("ARCHIVE FAILED: CONNECTION LOST.");
+            showAlert(`FAILED: ${err.message}`, "error");
         } finally {
             setSaving(false);
         }
@@ -188,11 +220,11 @@ const Result = () => {
                             <motion.button
                                 whileHover={{ scale: 1.02, y: -4 }}
                                 whileTap={{ scale: 0.98 }}
-                                onClick={handleShare}
+                                onClick={handleEmailClick}
                                 disabled={saving}
                                 className="w-full py-3 btn-game-secondary flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base !text-black"
                             >
-                                <Share2 size={20} /> {saving ? 'UPLOADING...' : 'UPLOAD TO CLOUD'}
+                                <Mail size={20} /> {saving ? 'SENDING...' : 'SEND TO EMAIL'}
                             </motion.button>
 
                             <motion.button
@@ -217,6 +249,61 @@ const Result = () => {
                     </motion.div>
                 </div>
             </div>
+
+            {/* Email Input Modal */}
+            {showEmailModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                    <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="bg-white border-4 border-black p-6 rounded-2xl max-w-md w-full relative shadow-[8px_8px_0_#000]"
+                    >
+                        <button
+                            onClick={() => setShowEmailModal(false)}
+                            className="absolute top-4 right-4 text-black hover:scale-110 transition-transform"
+                        >
+                            <X size={24} />
+                        </button>
+
+                        <h2 className="text-2xl font-titan text-game-primary mb-2">SEND PERMANENTLY</h2>
+                        <p className="text-gray-600 mb-6 font-mono text-sm leading-relaxed">
+                            Enter your email to receive the high-quality digital copy of your photo strip.
+                        </p>
+
+                        <form onSubmit={handleSendEmail} className="flex flex-col gap-4">
+                            <div>
+                                <label className="block font-bold text-xs mb-1 uppercase tracking-wider">Email Address</label>
+                                <input
+                                    type="email"
+                                    required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="yourname@gmail.com"
+                                    className="w-full border-2 border-black rounded-lg p-3 font-mono focus:outline-none focus:ring-4 focus:ring-game-primary/30"
+                                />
+                            </div>
+
+                            <motion.button
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                disabled={saving}
+                                type="submit"
+                                className="bg-game-success text-black font-titan py-3 rounded-lg border-2 border-black shadow-[4px_4px_0_#000] hover:translate-y-[2px] hover:shadow-[2px_2px_0_#000] transition-all flex items-center justify-center gap-2"
+                            >
+                                {saving ? (
+                                    <>
+                                        <Sparkles className="animate-spin" size={20} /> SENDING...
+                                    </>
+                                ) : (
+                                    <>
+                                        SEND NOW <Mail size={20} />
+                                    </>
+                                )}
+                            </motion.button>
+                        </form>
+                    </motion.div>
+                </div>
+            )}
         </div>
     );
 };

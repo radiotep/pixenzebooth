@@ -9,6 +9,8 @@ import { Helmet } from 'react-helmet-async';
 import TurnstileWidget from '../components/TurnstileWidget';
 import bagibagiDonate from '../assets/bagibagi-donate.png';
 
+import logoNew from '../assets/logo-new.png';
+
 const Home = () => {
     const navigate = useNavigate();
     const { user, signInWithGoogle, signOut, signInAnonymously } = useAuth();
@@ -103,7 +105,7 @@ const Home = () => {
 
             {/* Donate Button - Fixed Top Right */}
             <motion.a
-                href="https://bagibagi.co/nandajoming"
+                href="https://bagibagi.co/PixenzeBooth"
                 target="_blank"
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, x: 50 }}
@@ -111,7 +113,7 @@ const Home = () => {
                 transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
                 whileHover={{ scale: 1.08, y: -3 }}
                 whileTap={{ scale: 0.95 }}
-                className="fixed top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 z-50 drop-shadow-lg hover:drop-shadow-2xl transition-all"
+                className="fixed bottom-4 left-4 sm:bottom-auto sm:left-auto sm:top-4 sm:right-4 md:top-6 md:right-6 z-50 drop-shadow-lg hover:drop-shadow-2xl transition-all"
             >
                 <img
                     src={bagibagiDonate}
@@ -417,27 +419,9 @@ const Home = () => {
                 transition={{ delay: 0.5 }}
                 className="w-full py-4 md:py-6 flex justify-center gap-4 md:gap-8 text-white/50 font-bold font-mono text-xs tracking-widest z-20"
             >
-                <motion.button
-                    whileHover={{ scale: 1.15, color: "#00F0FF" }}
-                    onClick={() => navigate('/about')}
-                    className="hover:text-game-secondary transition"
-                >
-                    ABOUT
-                </motion.button>
-                <motion.button
-                    whileHover={{ scale: 1.15, color: "#00F0FF" }}
-                    onClick={() => navigate('/privacy')}
-                    className="hover:text-game-secondary transition"
-                >
-                    PRIVACY
-                </motion.button>
-                <motion.button
-                    whileHover={{ scale: 1.15, color: "#00F0FF" }}
-                    onClick={() => navigate('/contact')}
-                    className="hover:text-game-secondary transition"
-                >
-                    CONTACT
-                </motion.button>
+                <p>
+                    &copy; {new Date().getFullYear()} PIXENZEBOOTH. ALL RIGHTS RESERVED.
+                </p>
             </motion.div>
         </div>
     );

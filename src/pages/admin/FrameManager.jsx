@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAlert } from '../../context/AlertContext';
 import { getFrames, deleteFrame, updateFrame } from '../../services/frames';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Trash2, Edit, Home, AlertCircle, Sparkles } from 'lucide-react';
@@ -6,6 +7,7 @@ import { motion } from 'framer-motion';
 
 const FrameManager = () => {
     const navigate = useNavigate();
+    const { showAlert } = useAlert();
     const [frames, setFrames] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -19,7 +21,7 @@ const FrameManager = () => {
             setFrames(data);
         } catch (error) {
             console.error("Failed to load frames:", error);
-            alert("Failed to load frames. Check console.");
+            showAlert("Failed to load frames. Check console.", "error");
         } finally {
             setLoading(false);
         }
@@ -32,7 +34,7 @@ const FrameManager = () => {
             setFrames(frames.filter(f => f.id !== id));
         } catch (error) {
             console.error(error);
-            alert("Failed to delete.");
+            showAlert("Failed to delete.", "error");
         }
     };
 
@@ -43,7 +45,7 @@ const FrameManager = () => {
             setFrames(frames.map(f => f.id === frame.id ? updated : f));
         } catch (error) {
             console.error(error);
-            alert("Failed to update status.");
+            showAlert("Failed to update status.", "error");
         }
     };
 
