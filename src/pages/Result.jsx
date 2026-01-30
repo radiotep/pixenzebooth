@@ -6,7 +6,8 @@ import { Download, Share2, RotateCcw, Star, Sparkles, Mail, X } from 'lucide-rea
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../lib/supabase';
 import { uploadAndSendEmail } from '../services/googleDriveService';
-import { motion } from 'framer-motion';
+import { checkCampaignStatus, submitWinner } from '../services/campaignService';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Result = () => {
     const { state } = useLocation();
@@ -17,6 +18,11 @@ const Result = () => {
     const [saving, setSaving] = useState(false);
     const [showEmailModal, setShowEmailModal] = useState(false);
     const [email, setEmail] = useState('');
+
+    // Campaign State
+    const [showCampaignModal, setShowCampaignModal] = useState(false);
+    const [campaignData, setCampaignData] = useState({ name: '', whatsapp: '', address: '' });
+    const [campaignLoading, setCampaignLoading] = useState(false);
 
     useEffect(() => {
         if (state?.photos) {
@@ -35,6 +41,77 @@ const Result = () => {
             navigate('/');
         }
     }, [state, navigate]);
+
+    // Check Campaign Eligibility
+    useEffect(() => {
+        const verifyCampaign = async () => {
+            // Only show if we have a strip URL (photo finished)
+            // And wait a bit for effect
+            if (stripUrl) {
+                const status = await checkCampaignStatus();
+                if (status.active) {
+                    setTimeout(() => setShowCampaignModal(true), 1500); // Popup after 1.5s
+                }
+            }
+        };
+        verifyCampaign();
+    }, [stripUrl]);
+
+    const handleCampaignSubmit = async (e) => {
+        e.preventDefault();
+        setCampaignLoading(true);
+
+        try {
+            // 1. Upload Photo to "Winners Folder" in Google Drive first
+            // We need to convert blob URL to Base64
+            const response = await fetch(stripUrl);
+            const blob = await response.blob();
+            const reader = new FileReader();
+
+            reader.readAsDataURL(blob);
+            reader.onloadend = async () => {
+                const base64 = reader.result;
+
+                // Upload with isWinner = true flag (no email sent if email is empty? wait, the service sends email.
+                // We actually just want the upload. But the service requires email to send email.
+                // We'll pass campaignData.name as a dummy email if we don't want to email them yet,
+                // OR we can pass a dummy email like "WinnerUpload@system" if we modify GAS.
+                // Actually, let's just use their submitted email if we had one? We don't have email in the campaign form.
+                // The campaign form has Name, WA, Address.
+                // GAS script sends email if 'email' param is present.
+
+                // Let's modify uploadAndSendEmail to allow empty email (just upload).
+                // But for now, let's just upload using a system placeholder or empty string.
+
+                const uploadResult = await uploadAndSendEmail(base64, "", true); // email empty, isWinner=true
+
+                if (!uploadResult.success) {
+                    throw new Error("Failed to upload winning photo.");
+                }
+
+                const winnerPayload = {
+                    ...campaignData,
+                    user_id: user?.id || null,
+                    photo_url: uploadResult.url // Permanent Drive Link
+                };
+
+                const result = await submitWinner(winnerPayload);
+
+                if (result.success) {
+                    showAlert("CONGRATULATIONS! You secured your spot!", "success");
+                    setShowCampaignModal(false);
+                } else {
+                    showAlert(result.message, "error");
+                }
+                setCampaignLoading(false);
+            };
+
+        } catch (err) {
+            console.error(err);
+            showAlert("Error claiming reward: " + err.message, "error");
+            setCampaignLoading(false);
+        }
+    };
 
     const handleDownload = () => {
         if (stripUrl) {
@@ -304,6 +381,90 @@ const Result = () => {
                     </motion.div>
                 </div>
             )}
+
+            {/* LUCKY WINNER CAMPAIGN MODAL */}
+            <AnimatePresence>
+                {showCampaignModal && (
+                    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+                        <motion.div
+                            initial={{ scale: 0, rotate: -20 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            exit={{ scale: 0, opacity: 0 }}
+                            transition={{ type: "spring", bounce: 0.5 }}
+                            className="bg-gradient-to-br from-yellow-400 to-orange-500 border-[6px] border-white p-6 md:p-8 rounded-3xl max-w-lg w-full relative shadow-[0_0_50px_rgba(255,215,0,0.6)] text-center"
+                        >
+                            <button
+                                onClick={() => setShowCampaignModal(false)}
+                                className="absolute top-4 right-4 text-white hover:scale-110 font-bold bg-black/20 rounded-full w-8 h-8 flex items-center justify-center"
+                            >
+                                ✕
+                            </button>
+
+                            <motion.div
+                                animate={{ rotate: [0, 10, -10, 0] }}
+                                transition={{ repeat: Infinity, duration: 2 }}
+                                className="inline-block bg-white p-3 rounded-full border-4 border-black shadow-[4px_4px_0_rgba(0,0,0,0.2)] mb-4"
+                            >
+                                <span className="text-4xl">🎉</span>
+                            </motion.div>
+
+                            <h2 className="text-3xl md:text-5xl font-titan text-white drop-shadow-[4px_4px_0_#000] mb-2 leading-tight">
+                                YOU ARE LUCKY!
+                            </h2>
+                            <p className="text-black font-bold font-mono text-sm md:text-base mb-6 bg-white/30 inline-block px-4 py-1 rounded-full border border-black/10">
+                                LIMITED SLOT! CLAIM YOUR FREE PRINT
+                            </p>
+
+                            <form onSubmit={handleCampaignSubmit} className="flex flex-col gap-3 text-left">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-black uppercase ml-1">Full Name</label>
+                                    <input
+                                        type="text" required
+                                        value={campaignData.name}
+                                        onChange={e => setCampaignData({ ...campaignData, name: e.target.value })}
+                                        className="w-full p-3 rounded-xl border-4 border-black font-bold focus:ring-4 ring-white outline-none"
+                                        placeholder="Your Name"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-black uppercase ml-1">WhatsApp Number</label>
+                                    <input
+                                        type="tel" required
+                                        value={campaignData.whatsapp}
+                                        onChange={e => setCampaignData({ ...campaignData, whatsapp: e.target.value })}
+                                        className="w-full p-3 rounded-xl border-4 border-black font-bold focus:ring-4 ring-white outline-none"
+                                        placeholder="08xxxxxxxx"
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-black uppercase ml-1">Shipping Address</label>
+                                    <textarea
+                                        required
+                                        value={campaignData.address}
+                                        onChange={e => setCampaignData({ ...campaignData, address: e.target.value })}
+                                        className="w-full p-3 rounded-xl border-4 border-black font-bold focus:ring-4 ring-white outline-none h-24 resize-none"
+                                        placeholder="Full address for delivery..."
+                                    />
+                                </div>
+
+                                <motion.button
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    disabled={campaignLoading}
+                                    type="submit"
+                                    className="mt-4 bg-[#39FF14] text-black font-titan text-xl py-4 rounded-xl border-b-8 border-green-800 hover:border-b-0 hover:translate-y-2 transition-all shadow-xl"
+                                >
+                                    {campaignLoading ? 'CLAIMING...' : 'CLAIM REWARD NOW!'}
+                                </motion.button>
+                            </form>
+                            <p className="text-[10px] text-black/50 mt-4 font-mono">
+                                *First come first serve. Only for first 10 winners.
+                            </p>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
         </div>
     );
 };

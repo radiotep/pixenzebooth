@@ -43,9 +43,13 @@ function doPost(e) {
     var blob = Utilities.newBlob(decoded, "image/png", filename);
 
     // 3. Save to Google Drive
-    // Optional: Create a specific folder. 
-    // If you want a specific folder, replace 'root' with folder ID: DriveApp.getFolderById('YOUR_ID')
-    var folderName = "PixenzeBooth Uploads";
+    // Logic for separating Winners photos for easier printing
+    var folderName = "PixenzeBooth Uploads"; // Default folder
+    
+    if (data.isWinner) {
+      folderName = "PixenzeBooth_WINNERS_PRINT"; // Special folder for winners
+    }
+
     var folders = DriveApp.getFoldersByName(folderName);
     var folder;
     

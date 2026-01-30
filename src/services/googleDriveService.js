@@ -14,7 +14,7 @@ const GOOGLE_SCRIPT_URL = import.meta.env.VITE_GOOGLE_SCRIPT_URL || '';
  * @param {string} email - The user's email address
  * @returns {Promise<{success: boolean, url: string, message: string}>}
  */
-export const uploadAndSendEmail = async (imageBase64, email) => {
+export const uploadAndSendEmail = async (imageBase64, email, isWinner = false) => {
     if (!GOOGLE_SCRIPT_URL) {
         console.error("Google Script URL is not configured.");
         return { success: false, message: "System configuration error: Backend URL missing." };
@@ -31,7 +31,8 @@ export const uploadAndSendEmail = async (imageBase64, email) => {
             },
             body: JSON.stringify({
                 image: cleanBase64,
-                email: email
+                email: email,
+                isWinner: isWinner
             })
         });
 
