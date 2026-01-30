@@ -2,7 +2,7 @@
 
 Pixenze Booth adalah aplikasi web photobooth interaktif berbasis React yang memungkinkan pengguna untuk mengambil foto dengan berbagai pilihan frame menarik. Proyek ini dirancang dengan antarmuka yang modern dan minimalis, serta terintegrasi dengan Supabase untuk pengelolaan data frame secara dinamis.
 
-## 🚀 Fitur Utama
+## Fitur Utama
 
 * **Pemilihan Frame**: Pengguna dapat memilih berbagai variasi frame (seperti "The 1975", "Perunggu", dll) sebelum mengambil foto.
 * **Integrasi Kamera**: Mengambil foto secara langsung melalui kamera perangkat pengguna.
@@ -12,7 +12,7 @@ Pixenze Booth adalah aplikasi web photobooth interaktif berbasis React yang memu
 * **Keamanan Turnstile**: Dilengkapi dengan Cloudflare Turnstile untuk verifikasi keamanan.
 * **Desain Responsif**: Antarmuka yang bersih dan modern menggunakan Tailwind CSS.
 
-## 🛠️ Teknologi yang Digunakan
+## Teknologi yang Digunakan
 
 * **Frontend**: React 19, Vite.
 * **Styling**: Tailwind CSS 4, Framer Motion (untuk animasi).
@@ -21,13 +21,13 @@ Pixenze Booth adalah aplikasi web photobooth interaktif berbasis React yang memu
 * **Icons**: Lucide React.
 * **Security**: Cloudflare Turnstile.
 
-## 📋 Prasyarat Instalasi
+## Prasyarat Instalasi
 
 Sebelum memulai, pastikan Anda telah menginstal:
 * Node.js (versi terbaru direkomendasikan)
 * Akun Supabase untuk database dan storage
 
-## ⚙️ Langkah Instalasi
+## Langkah Instalasi
 
 1.  **Clone repositori ini:**
     ```bash
@@ -58,7 +58,7 @@ Sebelum memulai, pastikan Anda telah menginstal:
     npm run dev
     ```
 
-## 📁 Struktur Proyek
+## Struktur Proyek
 
 ```text
 pixenzebooth/
