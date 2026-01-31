@@ -241,7 +241,7 @@ Tabel utama: `frames`
         <sub><b>Nanda Addi Wijaya</b></sub>
       </a>
       <br />
-      <sub>Creator & Developer</sub>
+      <sub>OB at pixenizebooth.com</sub>
     </td>
   </tr>
 </table>
